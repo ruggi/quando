@@ -42,8 +42,7 @@ var Rules = []rules.Rule{
 
 			var err error
 
-			hour := t.Hour()
-			hour, err = strconv.Atoi(s[2])
+			hour, err := strconv.Atoi(s[2])
 			if err != nil {
 				return t, err
 			}
