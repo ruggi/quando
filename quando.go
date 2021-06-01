@@ -36,16 +36,20 @@ var defaultOptions = []Option{
 	WithRules(en.Rules...),
 }
 
-type boundary struct {
+type Boundary struct {
 	From int
 	To   int
 }
 
 type Result struct {
-	Time       time.Time
-	Duration   time.Duration
-	Text       string
-	boundaries []boundary
+	// The parsed time
+	Time time.Time
+	// The parsed duration
+	Duration time.Duration
+	// The text resulting from removing the matching time/date tokens from the original string
+	Text string
+	// The boundaries of the matching tokens
+	Boundaries []Boundary
 }
 
 func (p *Parser) Parse(s string) (Result, error) {
@@ -73,7 +77,7 @@ func (p *Parser) Parse(s string) (Result, error) {
 				return Result{}, err
 			}
 
-			res.boundaries = append(res.boundaries, boundary{
+			res.Boundaries = append(res.Boundaries, Boundary{
 				From: idx[i][0],
 				To:   idx[i][0] + len(sub[0]),
 			})
@@ -82,7 +86,7 @@ func (p *Parser) Parse(s string) (Result, error) {
 
 	chars := []byte(s)
 	for i := range chars {
-		for _, b := range res.boundaries {
+		for _, b := range res.Boundaries {
 			if i >= b.From && i < b.To {
 				chars[i] = 0
 			}
