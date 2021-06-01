@@ -135,4 +135,37 @@ var Rules = []rules.Rule{
 			return time.Date(year, month, day, t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), t.Location()), nil
 		},
 	},
+	// deadlines
+	{
+		Name: "deadlines",
+		Re:   regexp.MustCompile(`in +([0-9.]+) +((seconds?)|(minutes?)|(hours?)|(days?)|(weeks?)|(months?)|(years?))`),
+		TimeFn: func(t time.Time, s []string) (time.Time, error) {
+			mul, err := strconv.ParseFloat(s[1], 64)
+			if err != nil {
+				return t, err
+			}
+			units := map[int]func(time.Time) time.Time{
+				// seconds
+				3: func(t time.Time) time.Time { return t.Add(time.Duration(mul * float64(time.Second))) },
+				// minutes
+				4: func(t time.Time) time.Time { return t.Add(time.Duration(mul * float64(time.Minute))) },
+				// hours
+				5: func(t time.Time) time.Time { return t.Add(time.Duration(mul * float64(time.Hour))) },
+				// days
+				6: func(t time.Time) time.Time { return t.AddDate(0, 0, int(mul)) },
+				// weeks
+				7: func(t time.Time) time.Time { return t.AddDate(0, 0, int(7*mul)) },
+				// months
+				8: func(t time.Time) time.Time { return t.AddDate(0, int(mul), 0) },
+				// years
+				9: func(t time.Time) time.Time { return t.AddDate(int(mul), 0, 0) },
+			}
+			for k, v := range units {
+				if s[k] != "" {
+					return v(t), nil
+				}
+			}
+			return t, nil
+		},
+	},
 }

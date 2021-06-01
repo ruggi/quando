@@ -33,6 +33,10 @@ func TestRules(t *testing.T) {
 		{"block time tomorrow for 2 hours at 3pm", "1970-01-02T15:00:00+01:00", "2h0m0s"},
 		{"go back in time on oct 26, 1985", "1985-10-26T00:00:00+01:00", "0s"},
 		{"go back in time on 26 oct 1985", "1985-10-26T00:00:00+01:00", "0s"},
+		{"buy flowers in 2 days", "1970-01-03T00:00:00+01:00", "0s"},
+		{"buy flowers in 2.5 minutes", "1970-01-01T00:02:30+01:00", "0s"},
+		{"buy flowers in 2 months", "1970-03-01T00:00:00+01:00", "0s"},
+		{"buy flowers in 2 years", "1972-01-01T00:00:00+01:00", "0s"},
 	}
 
 	for _, tt := range tests {
