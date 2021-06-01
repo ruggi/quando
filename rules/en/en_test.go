@@ -39,6 +39,7 @@ func TestRules(t *testing.T) {
 		{"buy flowers in 2.5 minutes", "1970-01-01T00:02:30Z", "0s", "buy flowers"},
 		{"buy flowers in 2 months", "1970-03-01T00:00:00Z", "0s", "buy flowers"},
 		{"buy flowers in 2 years", "1972-01-01T00:00:00Z", "0s", "buy flowers"},
+		{"buy flowers in 2 years for 2 mins", "1972-01-01T00:00:00Z", "2m0s", "buy flowers"},
 	}
 
 	for _, tt := range tests {

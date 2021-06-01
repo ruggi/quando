@@ -64,7 +64,7 @@ var Rules = []rules.Rule{
 	},
 	{
 		Name: "duration",
-		Re:   regexp.MustCompile(`for ([0-9.]+) ?((h(ours?)?)|(m(inutes?)?))`),
+		Re:   regexp.MustCompile(`for ([0-9.]+) ?((h((ou)?r?s?)?)|(m(in(ute)?s?)?))`),
 		DurationFn: func(t time.Duration, s []string) (time.Duration, error) {
 			d, err := strconv.ParseFloat(s[1], 64)
 			if err != nil {
@@ -74,7 +74,7 @@ var Rules = []rules.Rule{
 			if s[3] != "" {
 				mul = time.Hour
 			}
-			if s[5] != "" {
+			if s[6] != "" {
 				mul = time.Minute
 			}
 			return t + time.Duration(float64(mul)*d), nil
