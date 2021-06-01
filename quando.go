@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/ruggi/quando/rules"
+	"github.com/ruggi/quando/rules/en"
 	"github.com/ruggi/quando/timeutil"
 )
 
@@ -14,6 +15,9 @@ type Parser struct {
 
 func NewParser(options ...Option) *Parser {
 	p := &Parser{}
+	for _, opt := range defaultOptions {
+		opt(p)
+	}
 	for _, opt := range options {
 		opt(p)
 	}
@@ -26,6 +30,10 @@ func WithRules(rules ...rules.Rule) Option {
 	return func(p *Parser) {
 		p.rules = rules
 	}
+}
+
+var defaultOptions = []Option{
+	WithRules(en.Rules...),
 }
 
 type boundary struct {
