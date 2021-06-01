@@ -145,11 +145,13 @@ var Rules = []rules.Rule{
 			}
 			units := map[int]func(time.Time) time.Time{
 				// seconds
-				3: func(t time.Time) time.Time { return t.Add(time.Duration(mul * float64(time.Second))) },
+				3: func(time.Time) time.Time { return timeutil.Now().Add(time.Duration(mul * float64(time.Second))) },
 				// minutes
-				4: func(t time.Time) time.Time { return t.Add(time.Duration(mul * float64(time.Minute))) },
+				4: func(time.Time) time.Time {
+					return timeutil.Now().Add(time.Duration(mul * float64(time.Minute)))
+				},
 				// hours
-				5: func(t time.Time) time.Time { return t.Add(time.Duration(mul * float64(time.Hour))) },
+				5: func(time.Time) time.Time { return timeutil.Now().Add(time.Duration(mul * float64(time.Hour))) },
 				// days
 				6: func(t time.Time) time.Time { return t.AddDate(0, 0, int(mul)) },
 				// weeks
