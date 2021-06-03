@@ -169,4 +169,26 @@ var Rules = []rules.Rule{
 			return t, nil
 		},
 	},
+	{
+		Name: "upcoming",
+		Re:   regexp.MustCompile(`((next)|(prev(ious)?)|(last)) ((day)|(week)|(month)|(year))`),
+		TimeFn: func(t time.Time, s []string) (time.Time, error) {
+			mul := 1
+			if s[3] != "" || s[5] != "" {
+				mul = -1
+			}
+			units := map[int]func(t time.Time, mul int) time.Time{
+				7:  func(t time.Time, mul int) time.Time { return t.AddDate(0, 0, mul) },   // day
+				8:  func(t time.Time, mul int) time.Time { return t.AddDate(0, 0, 7*mul) }, // week
+				9:  func(t time.Time, mul int) time.Time { return t.AddDate(0, mul, 0) },   // month
+				10: func(t time.Time, mul int) time.Time { return t.AddDate(mul, 0, 0) },   // year
+			}
+			for k, v := range units {
+				if s[k] != "" {
+					return v(t, mul), nil
+				}
+			}
+			return t, nil
+		},
+	},
 }
