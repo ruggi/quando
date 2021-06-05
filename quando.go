@@ -65,27 +65,32 @@ func (p *Parser) Parse(s string) (Result, error) {
 		if r.Disabled {
 			continue
 		}
-		idx := r.Re.FindAllStringSubmatchIndex(s, -1)
-		if len(idx) <= 0 {
+		indexes := r.Re.FindStringIndex(s)
+		if indexes == nil {
 			continue
 		}
-		submatches := r.Re.FindAllStringSubmatch(strings.ToLower(s), -1)
-		for i, sub := range submatches {
-			var err error
-			if r.DurationFn != nil {
-				res.Duration, err = r.DurationFn(res.Duration, sub)
-			} else {
-				res.Time, err = r.TimeFn(res.Time, sub)
+		matches := r.Re.FindStringSubmatch(s)
+		names := make(map[string]string, r.Re.NumSubexp())
+		for _, n := range r.Re.SubexpNames() {
+			i := r.Re.SubexpIndex(n)
+			if i < 0 {
+				continue
 			}
-			if err != nil {
-				return Result{}, err
-			}
-
-			res.Boundaries = append(res.Boundaries, Boundary{
-				From: idx[i][0],
-				To:   idx[i][0] + len(sub[0]),
-			})
+			names[n] = matches[i]
 		}
+		var err error
+		if r.DurationFn != nil {
+			res.Duration, err = r.DurationFn(res.Duration, names)
+		} else {
+			res.Time, err = r.TimeFn(res.Time, names)
+		}
+		if err != nil {
+			return Result{}, err
+		}
+		res.Boundaries = append(res.Boundaries, Boundary{
+			From: indexes[0],
+			To:   indexes[1],
+		})
 	}
 
 	chars := []byte(s)
