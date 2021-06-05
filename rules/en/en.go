@@ -90,7 +90,7 @@ var Rules = []rules.Rule{
 	},
 	{
 		Name: "date",
-		Re:   regexp.MustCompile(`(on ?)?(?P<date_pre>[0-9]{1,2})? ?((?P<jan>jan(uary)?)|(?P<feb>feb(ruary)?)|(?P<mar>mar(ch)?)|(?P<apr>apr(il)?)|(?P<may>may()?)|(?P<jun>jun(e)?)|(?P<jul>jul(y)?)|(?P<aug>aug(ust)?)|(?P<sep>sep(tember)?)|(?P<oct>oct(ober)?)|(?P<nov>nov(ember)?)|(?P<dec>dec(ember)?)) (((?P<date_post>[0-9]{1,2})[^0-9]))?([, ]+(?P<year>[0-9]{4}))?`),
+		Re:   regexp.MustCompile(`(on ?)?(?P<date_pre>[0-9]{1,2})? ?((?P<jan>jan(uary)?)|(?P<feb>feb(ruary)?)|(?P<mar>mar(ch)?)|(?P<apr>apr(il)?)|(?P<may>may()?)|(?P<jun>jun(e)?)|(?P<jul>jul(y)?)|(?P<aug>aug(ust)?)|(?P<sep>sep(tember)?)|(?P<oct>oct(ober)?)|(?P<nov>nov(ember)?)|(?P<dec>dec(ember)?)) (((?P<date_post>[0-9]{1,2})[^0-9]))?([, ]?(?P<year>[0-9]{4}))?`),
 		TimeFn: func(t time.Time, m map[string]string) (time.Time, error) {
 			var err error
 
