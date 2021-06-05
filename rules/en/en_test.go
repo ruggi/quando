@@ -44,6 +44,8 @@ func TestRules(t *testing.T) {
 		{"buy flowers next week at 5pm", "1970-01-08T17:00:00Z", "0s", "buy flowers"},
 		{"buy flowers next month at 5pm", "1970-02-01T17:00:00Z", "0s", "buy flowers"},
 		{"buy flowers next year at 5pm", "1971-01-01T17:00:00Z", "0s", "buy flowers"},
+		{"buy flowers next wednesday at 5pm", "1970-01-07T17:00:00Z", "0s", "buy flowers"},
+		{"buy flowers last wednesday at 5pm", "1969-12-31T17:00:00Z", "0s", "buy flowers"},
 	}
 
 	for _, tt := range tests {
