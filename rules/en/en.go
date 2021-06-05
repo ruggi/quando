@@ -156,17 +156,30 @@ var Rules = []rules.Rule{
 	},
 	{
 		Name: "upcoming",
-		Re:   regexp.MustCompile(`((?P<next>next)|(?P<prev>prev(ious)?)|(?P<last>last)) ((?P<day>day)|(?P<week>week)|(?P<month>month)|(?P<year>year))`),
+		Re:   regexp.MustCompile(`((?P<next>next)|(?P<prev>prev(ious)?)|(?P<last>last)) ((?P<day>day)|(?P<week>week)|(?P<month>month)|(?P<year>year)|(?P<sun>sun(day)?)|(?P<mon>mon(day)?)|(?P<tue>tue(sday)?)|(?P<wed>wed(nesday)?)|(?P<thu>thu(rsday)?)|(?P<fri>fri(day)?)|(?P<sat>sat(urday)?))`),
 		TimeFn: func(t time.Time, m map[string]string) (time.Time, error) {
 			mul := 1
 			if m["prev"] != "" || m["last"] != "" {
 				mul = -1
+			}
+			findDay := func(t time.Time, target string, mul int) time.Time {
+				for t.Weekday().String() != target {
+					t = t.AddDate(0, 0, mul)
+				}
+				return t
 			}
 			units := map[string]func(t time.Time, mul int) time.Time{
 				"day":   func(t time.Time, mul int) time.Time { return t.AddDate(0, 0, mul) },
 				"week":  func(t time.Time, mul int) time.Time { return t.AddDate(0, 0, 7*mul) },
 				"month": func(t time.Time, mul int) time.Time { return t.AddDate(0, mul, 0) },
 				"year":  func(t time.Time, mul int) time.Time { return t.AddDate(mul, 0, 0) },
+				"sun":   func(t time.Time, mul int) time.Time { return findDay(t, "Sunday", mul) },
+				"mon":   func(t time.Time, mul int) time.Time { return findDay(t, "Monday", mul) },
+				"tue":   func(t time.Time, mul int) time.Time { return findDay(t, "Tuesday", mul) },
+				"wed":   func(t time.Time, mul int) time.Time { return findDay(t, "Wednesday", mul) },
+				"thu":   func(t time.Time, mul int) time.Time { return findDay(t, "Thursday", mul) },
+				"fri":   func(t time.Time, mul int) time.Time { return findDay(t, "Friday", mul) },
+				"sat":   func(t time.Time, mul int) time.Time { return findDay(t, "Saturday", mul) },
 			}
 			for k, v := range units {
 				if m[k] != "" {
