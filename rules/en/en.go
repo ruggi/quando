@@ -48,7 +48,7 @@ var Rules = []rules.Rule{
 	},
 	{
 		Name: "at time",
-		Re:   regexp.MustCompile(`at ((?P<hours>[0-9]{1,2})(([.:,])?(?P<minutes>[0-9]{2}))? ?(?P<ampm>am|pm)?)`),
+		Re:   regexp.MustCompile(`(?i)at ((?P<hours>[0-9]{1,2})(([.:,])?(?P<minutes>[0-9]{2}))?( ?(?P<ampm>am|pm)?))?( ?(?P<tz>` + timeutil.ReTimezoneCodes() + `))?`),
 		TimeFn: func(t time.Time, m map[string]string) (time.Time, error) {
 			hour, err := strconv.Atoi(m["hours"])
 			if err != nil {
@@ -67,7 +67,18 @@ var Rules = []rules.Rule{
 				hour += 12
 			}
 
-			return time.Date(t.Year(), t.Month(), t.Day(), hour, min, t.Second(), t.Nanosecond(), t.Location()), nil
+			currentLocation := timeutil.Now().Location()
+			location := t.Location()
+
+			tz := m["tz"]
+			if tz != "" {
+				location, err = timeutil.GetTimezoneLocation(tz)
+				if err != nil {
+					return t, err
+				}
+			}
+
+			return time.Date(t.Year(), t.Month(), t.Day(), hour, min, t.Second(), t.Nanosecond(), location).In(currentLocation), nil
 		},
 	},
 	{
