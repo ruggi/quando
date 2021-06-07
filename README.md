@@ -46,3 +46,7 @@ func main() {
 | `buy groceries in 5 minutes`                    | now + 5 minutes     | 0        | `buy groceries`        |
 | `gym for 3 hours in 2 weeks`                    | 2 weeks from now    | 3h       | `gym`                  |
 | `send christmas cards on dec 23, 2050 at 16:30` | 2050/12/23 16:30:00 | 0        | `send christmas cards` |
+
+## Credits
+
+This started inspired by [when](https://github.com/olebedev/when), but with a slightly different take (e.g. support for durations, timezones, boundaries, etc.).
